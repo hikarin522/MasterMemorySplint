@@ -1,0 +1,50 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        options:
+          - MasterMemorySplint.sln
+      configuration:
+        type: choice
+        options:
+          - Debug
+          - Release
+
+env:
+  target: ${{ inputs.target || 'MasterMemorySplint.sln' }}
+  configuration: ${{ inputs.configuration || 'Debug' }}
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        global-json-file: global.json
+
+    - name: Restore tools
+      run: dotnet tool restore
+
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.target }}
+
+    - name: Format
+      run: dotnet format ${{ env.target }} --no-restore --verify-no-changes
+
+    - name: Build
+      run: dotnet build ${{ env.target }} --no-restore -c ${{ env.configuration }}
+
+    - name: Test
+      run: dotnet test ${{ env.target }} --no-build -c ${{ env.configuration }} --verbosity normal
