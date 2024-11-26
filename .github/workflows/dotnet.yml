@@ -41,7 +41,7 @@ jobs:
       run: dotnet restore ${{ env.target }}
 
     - name: Format
-      run: dotnet format ${{ env.target }} --no-restore --verify-no-changes
+      run: dotnet format ${{ env.target }} --no-restore --verify-no-changes --exclude 'System.Private.CoreLib/'
 
     - name: Build
       run: dotnet build ${{ env.target }} --no-restore -c ${{ env.configuration }}

@@ -1,3 +1,11 @@
 <Project>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Compile Include="$(MSBuildThisFileDirectory)System.Private.CoreLib\**\*.cs" LinkBase="System.Private.CoreLib" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <Compile Include="$(MSBuildThisFileDirectory)System.Private.CoreLib\CallerArgumentExpressionAttribute.cs" LinkBase="System.Private.CoreLib" Visible="false" />
+  </ItemGroup>
+
 </Project>
