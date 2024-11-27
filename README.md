@@ -19,7 +19,7 @@ For more information on `ITable`, see below.
 ### Speeding up validation
 https://github.com/Cysharp/MasterMemory/tree/2.4.4#validator
 
-Speeding up validation by generating a parallel version of MemoryDatabase.Validate.  
+Speeding up validation by generating a parallel version of `MemoryDatabase.Validate`.  
 See below for usage examples.
 ```cs
 memoryDataBase.Validate(Environment.ProcessorCount, cancellationToken);
