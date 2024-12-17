@@ -145,8 +145,7 @@ partial class {{tableSymbol.PrintMin()}}: ITable<{{tableSymbol.Print()}}, {{elem
     static MetaTable ITable.CreateMetaTable() => throw new NotImplementedException("DISABLE_MASTERMEMORY_METADATABASE is defined");
 #endif
 }
-"""
-        );
+""");
 
         return sb.ToString();
     }

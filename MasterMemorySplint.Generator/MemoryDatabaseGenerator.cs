@@ -89,7 +89,7 @@ internal static class MemoryDatabaseGenerator
         }
     }
 
-    private static string createMemoryDatabaseExtensionsSource(INamedTypeSymbol dbSymbol, ReadOnlySpan<(string, string)> tableList)
+    private static string createMemoryDatabaseExtensionsSource(INamedTypeSymbol dbSymbol, ReadOnlySpan<(string table, string pk)> tableList)
     {
         var sb = new StringBuilder();
 
@@ -118,34 +118,18 @@ public static partial class {{dbSymbol.PrintMin()}}Extensions
         }
 
         var database = new ValidationDatabase(new object[] {
-"""
-        );
-
-        foreach (var (table, _) in tableList) {
-            _ = sb.AppendLine($$"""
-            @this.{{table}},
-"""
-            );
-        }
-
-        _ = sb.AppendLine($$"""
+""").AppendLines(tableList, static e => $$"""
+            @this.{{e.table}},
+""").AppendLine($$"""
         });
 
         var validators = new Action<ValidateResult>[] {
-"""
-        );
-
-        foreach (var (table, pk) in tableList) {
-            _ = sb.AppendLine($$"""
+""").AppendLines(tableList, static e => $$"""
             result => {
-                ((ITableUniqueValidate)@this.{{table}}).ValidateUnique(result);
-                helper.ValidateTable(@this.{{table}}, database, "{{pk}}", result);
+                ((ITableUniqueValidate)@this.{{e.table}}).ValidateUnique(result);
+                helper.ValidateTable(@this.{{e.table}}, database, "{{e.pk}}", result);
             },
-"""
-            );
-        }
-
-        _ = sb.AppendLine($$"""
+""").AppendLine($$"""
         };
 
         var result = new ValidateResult();
@@ -165,9 +149,7 @@ public static partial class {{dbSymbol.PrintMin()}}Extensions
     }
 #endif
 }
-"""
-        );
-
+""");
         return sb.ToString();
     }
 }
